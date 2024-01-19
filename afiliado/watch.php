@@ -36,19 +36,24 @@ if (isset($_GET['id_produto'])) {
 <head>
     <meta charset="UTF-8">
     <title>Assistir Vídeo</title>
-    <!-- Inclua quaisquer estilos ou scripts aqui -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Estilo personalizado -->
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
-    <div>
+<body>
+    <div class="video-container">
         <h2>Assistir Vídeo</h2>
         <?php if (!empty($videoPath)): ?>
-            <video width="640" height="480" controls>
+            <video controls>
                 <source src="<?php echo htmlspecialchars($videoPath); ?>" type="video/mp4">
                 Seu navegador não suporta a exibição deste vídeo.
             </video>
         <?php else: ?>
-            <p>Vídeo não encontrado.</p>
+            <p class="error-message">Vídeo não encontrado.</p>
         <?php endif; ?>
     </div>
+</body>
+
 </body>
 </html>

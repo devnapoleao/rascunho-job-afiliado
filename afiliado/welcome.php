@@ -25,14 +25,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         // Obtém o ID do último produto inserido
         $ultimoId = $pdo->lastInsertId();
 
-        // Processa o upload do vídeo e gera o link de afiliado
-        // (assumindo que a lógica de upload e atualização do produto já foi implementada)
+        // Verifica se o arquivo de vídeo foi carregado
+        if (isset($_FILES["video"]) && $_FILES["video"]["error"] == 0) {
+            $videoPath = "videos/" . $ultimoId . "." . pathinfo($_FILES["video"]["name"], PATHINFO_EXTENSION);
+            
+            // Move o arquivo para a pasta 'videos'
+            if (move_uploaded_file($_FILES["video"]["tmp_name"], $videoPath)) {
+                // Atualiza a entrada do produto com o link do vídeo
+                $updateQuery = "UPDATE produtos SET link_video = :link_video WHERE id = :id";
+                $stmt = $pdo->prepare($updateQuery);
+                $stmt->bindParam(':link_video', $videoPath);
+                $stmt->bindParam(':id', $ultimoId);
+                $stmt->execute();
 
-        $statusMsg = "Produto adicionado com sucesso!";
+                $statusMsg = "Produto adicionado com sucesso!";
+            } else {
+                $statusMsg = "Erro ao fazer upload do vídeo.";
+            }
+        } else {
+            $statusMsg = "Erro ao fazer upload do vídeo.";
+        }
     } else {
         $statusMsg = "Erro ao adicionar produto.";
     }
 }
+
 
 // Recuperar produtos para exibir
 $selectQuery = "SELECT * FROM produtos";
@@ -46,52 +63,56 @@ $produtos = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <title>Dashboard de Produtos</title>
-    <!-- Estilos e scripts aqui -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Estilo personalizado -->
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
-    <div>
+    <div class="container">
         <h2>Adicionar Produto</h2>
-        <p><?php echo $statusMsg; ?></p>
+        <p class="text-success"><?php echo $statusMsg; ?></p>
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
-            <div>
+            <div class="form-group">
                 <label>Título do Produto:</label>
-                <input type="text" name="titulo_produto" required>
+                <input type="text" name="titulo_produto" class="form-control" required>
             </div>
-            <div>
+            <div class="form-group">
                 <label>Vídeo:</label>
-                <input type="file" name="video" required>
+                <input type="file" name="video" class="form-control-file" required>
             </div>
             <div>
-                <input type="submit" name="submit" value="Adicionar Produto">
+                <input type="submit" name="submit" value="Adicionar Produto" class="btn btn-primary">
             </div>
         </form>
     </div>
 
-    <div>
+    <div class="container">
         <h2>Lista de Produtos</h2>
-        <table>
-            <tr>
-                <th>Título do Produto</th>
-                <th>Link do Vídeo</th>
-                <th>Link Afiliado</th>
-                <th>Cliques</th>
-                <th>Ações</th>
-            </tr>
-            <?php foreach ($produtos as $produto): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($produto['titulo']); ?></td>
-                <td><?php echo htmlspecialchars($produto['link_video']); ?></td>
-                <td>
-    <a href="#" class="copy-link" data-link="click.php?id_produto=<?php echo $produto['id']; ?>&id_usuario=<?php echo $_SESSION['id']; ?>">Link Afiliado</a>
-</td>
-
-
-                <td><?php echo htmlspecialchars($produto['cliques']); ?></td>
-                <td>
-                    <!-- Botões de editar e excluir -->
-                </td>
-            </tr>
-            <?php endforeach; ?>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Título do Produto</th>
+                    <th>Link do Vídeo</th>
+                    <th>Link Afiliado</th>
+                    <th>Cliques</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($produtos as $produto): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($produto['titulo']); ?></td>
+                    <td><?php echo htmlspecialchars($produto['link_video']); ?></td>
+                    <td>
+                        <a href="#" class="copy-link" data-link="click.php?id_produto=<?php echo $produto['id']; ?>&id_usuario=<?php echo $_SESSION['id']; ?>">Link Afiliado</a>
+                    </td>
+                    <td><?php echo htmlspecialchars($produto['cliques']); ?></td>
+                    <td>
+                        <!-- Botões de editar e excluir -->
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
         </table>
     </div>
     <script>

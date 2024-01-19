@@ -91,27 +91,31 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta charset="UTF-8">
     <title>Login</title>
     <!-- Estilos e scripts aqui (se necessário) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Estilo personalizado -->
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
-    <div>
+    <div class="form-container">
         <h2>Login</h2>
         <p>Por favor, preencha seus dados para fazer login.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div>
+            <div class="form-group">
                 <label>Nome de Usuário</label>
-                <input type="text" name="username" value="<?php echo $username; ?>">
-                <span><?php echo $username_err; ?></span>
+                <input type="text" name="username" value="<?php echo $username; ?>" class="form-control">
+                <span class="error"><?php echo $username_err; ?></span>
             </div>    
-            <div>
+            <div class="form-group">
                 <label>Senha</label>
-                <input type="password" name="password">
-                <span><?php echo $password_err; ?></span>
+                <input type="password" name="password" class="form-control">
+                <span class="error"><?php echo $password_err; ?></span>
             </div>
             <div>
-                <input type="submit" value="Login">
+                <input type="submit" value="Login" class="btn btn-primary">
             </div>
             <p>Não tem uma conta? <a href="register.php">Registre-se agora</a>.</p>
         </form>
     </div>    
 </body>
+ 
 </html>

@@ -95,33 +95,37 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Estilo personalizado -->
+    <link href="style.css" rel="stylesheet">
     <title>Cadastro</title>
 </head>
 <body>
-    <div>
+    <div class="form-container">
         <h2>Cadastro</h2>
         <p>Preencha este formulário para criar uma conta.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div>
+            <div class="form-group">
                 <label>Nome de Usuário</label>
-                <input type="text" name="username" value="<?php echo $username; ?>">
-                <span><?php echo $username_err; ?></span>
+                <input type="text" name="username" value="<?php echo $username; ?>" class="form-control">
+                <span class="error"><?php echo $username_err; ?></span>
             </div>    
-            <div>
+            <div class="form-group">
                 <label>Senha</label>
-                <input type="password" name="password" value="<?php echo $password; ?>">
-                <span><?php echo $password_err; ?></span>
+                <input type="password" name="password" class="form-control">
+                <span class="error"><?php echo $password_err; ?></span>
             </div>
-            <div>
+            <div class="form-group">
                 <label>Confirme a Senha</label>
-                <input type="password" name="confirm_password" value="<?php echo $confirm_password; ?>">
-                <span><?php echo $confirm_password_err; ?></span>
+                <input type="password" name="confirm_password" class="form-control">
+                <span class="error"><?php echo $confirm_password_err; ?></span>
             </div>
-            <div>
-                <input type="submit" value="Cadastrar">
+            <div class="form-group">
+                <input type="submit" value="Cadastrar" class="btn btn-primary">
             </div>
             <p>Já tem uma conta? <a href="index.php">Faça login aqui</a>.</p>
         </form>
     </div>    
 </body>
+
 </html>
